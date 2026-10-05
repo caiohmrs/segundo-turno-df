@@ -158,7 +158,7 @@ def mapa_escolas(df: pd.DataFrame, escolhida=None, altura: int = 460):
     A cor mostra o terreno do 2º turno: laranja onde o nosso lado ganha a escola, azul onde quem
     ganha é o adversário. Devolve o retorno do `st_folium` (o clique nas bolinhas).
     """
-    mapa = folium.Map(location=CENTRO_DF, zoom_start=10, tiles="CartoDB positron",
+    mapa = folium.Map(location=CENTRO_DF, zoom_start=10, tiles="OpenStreetMap",
                       control_scale=False)
     for _, r in df.iterrows():
         if pd.isna(r["latitude"]) or pd.isna(r["longitude"]):

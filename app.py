@@ -166,7 +166,6 @@ else:
         st.session_state["mv_escola"] = locais[0]
     escolhida = st.selectbox(
         "Escola (na ordenação escolhida)", locais,
-        index=locais.index(st.session_state["mv_escola"]),
         format_func=lambda l: rotulos[l], key="mv_escola",
         help="o mapa e a busca alimentam esta escolha",
     )
