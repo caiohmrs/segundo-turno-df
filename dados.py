@@ -15,6 +15,7 @@ seis linhas do cartão somam exatamente o eleitorado da escola:
 """
 import json
 import os
+import unicodedata
 
 import pandas as pd
 import streamlit as st
@@ -28,6 +29,12 @@ CARGO_ROTULO = {"governador": "Governador", "presidente": "Presidente"}
 
 
 # ------------------------------------------------------------------ dados
+def sem_acento(txt) -> str:
+    """'Águas Claras' -> 'AGUAS CLARAS' (busca funciona sem acento)."""
+    limpo = "".join(c for c in unicodedata.normalize("NFKD", str(txt)) if not unicodedata.combining(c))
+    return limpo.upper()
+
+
 @st.cache_data(show_spinner=False)
 def escolas() -> pd.DataFrame:
     df = pd.read_csv(os.path.join(DADOS, "escolas.csv"), sep=";", dtype={"zona": str, "local": str})
@@ -37,6 +44,9 @@ def escolas() -> pd.DataFrame:
         df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0).astype(int)
     for c in ("latitude", "longitude"):
         df[c] = pd.to_numeric(df[c].astype(str).str.replace(",", ".", regex=False), errors="coerce")
+    # campo único de busca: escola + endereço + bairro, sem acento
+    df["busca"] = (df["escola"].fillna("") + " " + df["endereco"].fillna("")
+                   + " " + df["bairro"].fillna("")).map(sem_acento)
     return df
 
 
@@ -107,6 +117,7 @@ CSS = """<style>
 .faixa .s{color:#ffffff;opacity:.9;font-size:14px;margin-top:2px}
 .vi{margin-bottom:8px;padding:10px 12px;border:1px solid rgba(128,128,128,.32);border-radius:10px}
 .vi .e{font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.vi .end{font-size:12px;line-height:1.2;opacity:.8;margin-top:1px;overflow-wrap:anywhere}
 .vi .s{font-size:12px;opacity:.65;margin-bottom:4px}
 .vi .l{display:flex;align-items:center;gap:8px;margin-top:3px}
 .vi .r{flex:0 0 42%;font-size:12px;line-height:1.15;overflow-wrap:anywhere}
@@ -139,15 +150,16 @@ def seletor_zonas(df: pd.DataFrame, prefixo: str):
                           key=f"{prefixo}_zonas", placeholder="todas as zonas")
 
 
-def busca_escola(prefixo: str, label: str = "Buscar escola"):
-    return st.text_input(label, "", key=f"{prefixo}_busca", placeholder="digite parte do nome da escola")
+def busca_escola(prefixo: str, label: str = "Buscar escola, endereço ou bairro"):
+    return st.text_input(label, "", key=f"{prefixo}_busca",
+                         placeholder="ex.: la salle, SQS 102, águas claras")
 
 
 def filtra(df: pd.DataFrame, zonas=None, busca: str = "") -> pd.DataFrame:
-    """Filtros na mão do usuário — nunca automáticos."""
+    """Filtros na mão do usuário — nunca automáticos. A busca cobre escola, endereço e bairro."""
     f = df
     if zonas:
         f = f[f["zona"].isin(zonas)]
     if busca and busca.strip():
-        f = f[f["escola"].str.upper().str.contains(busca.strip().upper(), regex=False)]
+        f = f[f["busca"].str.contains(sem_acento(busca.strip()), regex=False)]
     return f

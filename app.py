@@ -93,11 +93,12 @@ def linha(rotulo, valor, cor, maximo, total, negrito=False):
 
 
 if tabela:
-    t = f[["escola", "zona", "ra", "eleitores", "nosso", "adversario", "outros",
+    t = f[["escola", "endereco", "bairro", "zona", "ra", "eleitores", "nosso", "adversario", "outros",
            "brancos", "nulos", "abstencao", "reservatorio"]].copy()
     t["reservatorio_%"] = (t["reservatorio"] / t["eleitores"].replace(0, 1) * 100).round(1)
-    t.columns = ["Escola", "Zona", "RA", "Eleitores", f"{nome_nosso} (nosso)", f"{nome_adv} (adversário)",
-                 "Outros (saiu)", "Brancos", "Nulos", "Abstenção", "Reservatório", "Reservatório %"]
+    t.columns = ["Escola", "Endereço", "Bairro", "Zona", "RA", "Eleitores",
+                 f"{nome_nosso} (nosso)", f"{nome_adv} (adversário)", "Outros (saiu)", "Brancos",
+                 "Nulos", "Abstenção", "Reservatório", "Reservatório %"]
     st.dataframe(t, width="stretch", hide_index=True)
 else:
     blocos = []
@@ -107,9 +108,15 @@ else:
         if detalhar:
             valores += [int(r[col]) for _, col in outros]
         maximo = max(valores) or 1
-        p = [f'<div class="vi"><div class="e">{r["escola"]}</div>',
-             f'<div class="s">zona {int(r["zona"]):02d} · {r["ra"]} · '
-             f'{dados.n(r["eleitores"])} eleitores · {int(r["n_secoes"])} seções</div>']
+        bairro = str(r["bairro"] or "").strip()
+        endereco = str(r["endereco"] or "").strip()
+        if bairro and dados.sem_acento(bairro) not in dados.sem_acento(r["ra"]):
+            endereco = f"{endereco} · {bairro}" if endereco else bairro
+        p = [f'<div class="vi"><div class="e">{r["escola"]}</div>']
+        if endereco:
+            p.append(f'<div class="end">{endereco}</div>')
+        p.append(f'<div class="s">zona {int(r["zona"]):02d} · {r["ra"]} · '
+                 f'{dados.n(r["eleitores"])} eleitores · {int(r["n_secoes"])} seções</div>')
         p.append(linha(f'{r["nosso_nome"]} <span class="pit">nosso</span>', r["nosso"],
                        dados.NOSSO, maximo, total))
         p.append(linha(f'{r["adversario_nome"]} <span class="pit">adversário</span>', r["adversario"],
