@@ -1,0 +1,2 @@
+governador: 19/19 zonas com TODOS os candidatos exatos | branco 74.774 | nulo 81.454 | compareceram 1.817.921
+presidente: 19/19 zonas com TODOS os candidatos exatos | branco 25.362 | nulo 33.169 | compareceram 1.831.396

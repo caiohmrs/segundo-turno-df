@@ -1,0 +1,114 @@
+{
+ "governador": {
+  "dupla": [
+   "11",
+   "13"
+  ],
+  "candidatos": [
+   {
+    "numero": "11",
+    "nome": "Celina Leão"
+   },
+   {
+    "numero": "13",
+    "nome": "Leandro Grass"
+   },
+   {
+    "numero": "16",
+    "nome": "Professor Robson"
+   },
+   {
+    "numero": "28",
+    "nome": "Rico Pinheiro"
+   },
+   {
+    "numero": "29",
+    "nome": "Expedito Mendonça"
+   },
+   {
+    "numero": "30",
+    "nome": "Kiko Caputo"
+   },
+   {
+    "numero": "36",
+    "nome": "Elisson"
+   },
+   {
+    "numero": "40",
+    "nome": "Cappelli"
+   },
+   {
+    "numero": "45",
+    "nome": "Paula Belmonte"
+   },
+   {
+    "numero": "55",
+    "nome": "José Roberto Arruda"
+   },
+   {
+    "numero": "80",
+    "nome": "Professora Samara Mineiro"
+   }
+  ]
+ },
+ "presidente": {
+  "dupla": [
+   "22",
+   "13"
+  ],
+  "candidatos": [
+   {
+    "numero": "13",
+    "nome": "Lula"
+   },
+   {
+    "numero": "14",
+    "nome": "Renan Santos"
+   },
+   {
+    "numero": "16",
+    "nome": "Hertz Dias"
+   },
+   {
+    "numero": "21",
+    "nome": "Edmilson Costa"
+   },
+   {
+    "numero": "22",
+    "nome": "Flavio Bolsonaro"
+   },
+   {
+    "numero": "27",
+    "nome": "Clariana Barao"
+   },
+   {
+    "numero": "28",
+    "nome": "Leonardo Alves de Araujo"
+   },
+   {
+    "numero": "29",
+    "nome": "Rui Costa Pimenta"
+   },
+   {
+    "numero": "30",
+    "nome": "Zema"
+   },
+   {
+    "numero": "35",
+    "nome": "Veterinário Wilson Grassi"
+   },
+   {
+    "numero": "55",
+    "nome": "Ronaldo Caiado"
+   },
+   {
+    "numero": "70",
+    "nome": "Escritor Augusto Cury"
+   },
+   {
+    "numero": "80",
+    "nome": "Samara"
+   }
+  ]
+ }
+}
