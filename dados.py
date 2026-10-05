@@ -17,8 +17,10 @@ import json
 import os
 import unicodedata
 
+import folium
 import pandas as pd
 import streamlit as st
+from streamlit_folium import st_folium
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 DADOS = os.path.join(AQUI, "dados")
@@ -140,6 +142,52 @@ def faixa(titulo: str, subtitulo: str) -> None:
 
 def rodape(texto: str = "Criado por Caio Henrique Machado - DF") -> None:
     st.markdown(f'<div class="rodape">{texto}</div>', unsafe_allow_html=True)
+
+
+# ------------------------------------------------------------------ mapa
+COR_NA_FRENTE = "#ff6a00"   # na escola, o nosso lado está na frente
+COR_ATRAS = "#1f6feb"       # na escola, o adversário está na frente
+COR_ESCOLHIDA = "#111827"   # anel da escola escolhida
+
+CENTRO_DF = [-15.79, -47.88]
+
+
+def mapa_escolas(df: pd.DataFrame, escolhida=None, altura: int = 460):
+    """Mapa de ruas com **uma bolinha fixa por escola** (tamanho não muda com os votos).
+
+    A cor mostra o terreno do 2º turno: laranja onde o nosso lado ganha a escola, azul onde quem
+    ganha é o adversário. Devolve o retorno do `st_folium` (o clique nas bolinhas).
+    """
+    mapa = folium.Map(location=CENTRO_DF, zoom_start=10, tiles="CartoDB positron",
+                      control_scale=False)
+    for _, r in df.iterrows():
+        if pd.isna(r["latitude"]) or pd.isna(r["longitude"]):
+            continue
+        na_frente = r["nosso"] > r["adversario"]
+        cor = COR_NA_FRENTE if na_frente else COR_ATRAS
+        selecionada = escolhida is not None and str(r["local"]) == str(escolhida)
+        folium.CircleMarker(
+            location=[r["latitude"], r["longitude"]],
+            radius=7 if selecionada else 4.5,
+            color=COR_ESCOLHIDA if selecionada else cor,
+            weight=2.5 if selecionada else 1,
+            fill=True, fill_color=cor, fill_opacity=.85,
+            tooltip=(f'{r["escola"]} · reservatório {n(r["reservatorio"])} '
+                     f'({pc(r["reservatorio"], r["eleitores"])})'),
+        ).add_to(mapa)
+    return st_folium(mapa, height=altura, use_container_width=True, key="mv_mapa",
+                     returned_objects=["last_object_clicked", "last_object_clicked_tooltip"])
+
+
+def escola_do_clique(df: pd.DataFrame, clique):
+    """Descobre qual escola foi clicada no mapa (pela coordenada mais próxima)."""
+    if not clique or clique.get("lat") is None or clique.get("lng") is None:
+        return None
+    pontos = df.dropna(subset=["latitude", "longitude"])
+    if pontos.empty:
+        return None
+    distancia = ((pontos["latitude"] - clique["lat"]) ** 2 + (pontos["longitude"] - clique["lng"]) ** 2)
+    return str(pontos.loc[distancia.idxmin(), "local"])
 
 
 # ------------------------------------------------------------------ filtros na página

@@ -7,6 +7,17 @@ nulos + abstenções).
 - 2º turno do **governador**: Celina Leão (11) × Leandro Grass (13)
 - 2º turno do **presidente**: Flavio Bolsonaro (22) × Lula (13)
 
+## Como o painel funciona
+
+- **Uma página**: seletor de cargo (governador/presidente), filtro de zona/RA e busca por **escola,
+  endereço ou bairro** (sem acento).
+- **Mapa** com uma bolinha fixa por escola — **laranja** onde o nosso lado está na frente na escola,
+  **azul** onde quem está na frente é o adversário. Tocar na bolinha abre a escola.
+- **Cartão da escola escolhida** (pelo mapa, pelo seletor ou pela busca), com as seis fatias do
+  eleitorado e o reservatório do 2º turno em destaque.
+- Alternativas na própria página: **Ver todas as escolas** (cartões) e **Ver em tabela**; e o
+  **resumo por zona/RA** no fim.
+
 ## De onde vêm os números (100% fonte oficial)
 
 | dado | fonte |
